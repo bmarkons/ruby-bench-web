@@ -16,7 +16,9 @@ class BenchmarkRunsController < APIController
       script_url: benchmark_type_params[:script_url]
     )
 
-    benchmark_type.update_attributes(digest: benchmark_type_params[:digest])
+    benchmark_type.with_lock do
+      benchmark_type.update_attributes(digest: benchmark_type_params[:digest])
+    end
 
     benchmark_result_type = BenchmarkResultType.find_or_create_by!(
       benchmark_result_type_params
